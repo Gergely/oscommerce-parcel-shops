@@ -24,7 +24,7 @@ This mod is very simple to use only need some little code changes.
 
 4. Save shipping quotes into orders table
 
-### What are effects do?
+### What are effects doing?
 
 Shipping selection page ensure that be able to use google map `iframe` apps, `jQuery autocomplete` or `Bootstrap typeahead` input field selectors.
 Session safety data transfer allow to use parcel identity number during the whole checkout.
@@ -58,7 +58,7 @@ Code Example:
         $pre_data = tep_db_prepare_input($HTTP_POST_VARS['{myparcel_id}']);
 
         if (tep_not_null($pre_data[$shipping['id']])) {
-          $shipping['data'][{myparcel_id}] = $pre_data[$shipping['id']];
+          $shipping['data']['{myparcel_id}'] = $pre_data[$shipping['id']];
           $error = false;
         }
       }
@@ -77,7 +77,7 @@ Code example:
   function before_process() {
     global $order, $shipping;
     if ( isset($shipping['data']['{myparcel_id}']) && tep_not_null($shipping['data']['{myparcel_id}'])) {
-      $parcelshop_data = $this->parcelshop_data($shipping['data'][{myparcel_id}]);
+      $parcelshop_data = $this->parcelshop_data($shipping['data']['{myparcel_id}']);
       $order->delivery['company'] = $parcelshop_data['company'];
       $order->delivery['name'] = $order->delivery['lastname'] . ' ' . $order->delivery['firstname'];
       $order->delivery['street_address'] = $parcelshop_data['street'];
@@ -93,7 +93,7 @@ Code example:
 Use `cc_process` class method in {yourparcelshopmodule} class.
 
 ```php
-  function before_payment() {
+  function cc_process() {
      return {your email parcel shop address html};
   }
 ```
