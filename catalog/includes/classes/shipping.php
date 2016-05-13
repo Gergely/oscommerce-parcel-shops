@@ -11,7 +11,7 @@
 */
 
   class shipping {
-    var $modules;
+    var $modules, $selected_module;
 
 // class constructor
     function shipping($module = '') {
@@ -23,6 +23,7 @@
         $include_modules = array();
 
         if ( (tep_not_null($module)) && (in_array(substr($module['id'], 0, strpos($module['id'], '_')) . '.' . substr($PHP_SELF, (strrpos($PHP_SELF, '.')+1)), $this->modules)) ) {
+          $this->selected_module = substr($module['id'], 0, strpos($module['id'], '_'));
           $include_modules[] = array('class' => substr($module['id'], 0, strpos($module['id'], '_')), 'file' => substr($module['id'], 0, strpos($module['id'], '_')) . '.' . substr($PHP_SELF, (strrpos($PHP_SELF, '.')+1)));
         } else {
           reset($this->modules);
@@ -118,6 +119,43 @@
 
         return $cheapest;
       }
+    }
+
+    function before_process() {
+      if (is_array($this->modules)) {
+        if (is_object($GLOBALS[$this->selected_module]) && ($GLOBALS[$this->selected_module]->enabled) ) {
+          return $GLOBALS[$this->selected_module]->before_process();
+        }
+      }
+    }
+
+    function after_process() {
+      if (is_array($this->modules)) {
+        if (is_object($GLOBALS[$this->selected_module]) && ($GLOBALS[$this->selected_module]->enabled) ) {
+          return $GLOBALS[$this->selected_module]->after_process();
+        }
+      }
+    }
+    
+    function cc_process() {
+      if (is_array($this->modules)) {
+        if (is_object($GLOBALS[$this->selected_module]) && ($GLOBALS[$this->selected_module]->enabled) ) {
+          return $GLOBALS[$this->selected_module]->cc_process();
+        }
+      }
+    }
+    
+    function before_payment() {
+      if (is_array($this->modules)) {
+        if (is_object($GLOBALS[$this->selected_module]) && ($GLOBALS[$this->selected_module]->enabled) ) {
+          return $GLOBALS[$this->selected_module]->before_payment();
+        }
+      }
+    }
+
+    function set_module($module) {
+      $this->selected_module = $module;
+      return;
     }
   }
 ?>

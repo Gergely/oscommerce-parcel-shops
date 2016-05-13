@@ -64,6 +64,11 @@
   require(DIR_WS_CLASSES . 'shipping.php');
   $shipping_modules = new shipping($shipping);
 
+// Parcel Shops call later in payment_modules->process()
+  if ( method_exists($shipping_modules->selected_module, 'before_process') ) {
+    $shipping_modules->before_process();
+  }
+
   require(DIR_WS_CLASSES . 'order_total.php');
   $order_total_modules = new order_total;
   $order_total_modules->process();
@@ -133,7 +138,12 @@
             <td><?php echo '<strong>' . HEADING_SHIPPING_METHOD . '</strong> <a href="' . tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL') . '"><span class="orderEdit">(' . TEXT_EDIT . ')</span></a>'; ?></td>
           </tr>
           <tr>
-            <td><?php echo $order->info['shipping_method']; ?></td>
+            <td><?php echo $order->info['shipping_method'];
+// Parcel Shops
+      if ( method_exists($shipping_modules->selected_module, 'cc_process') ) {
+        echo $shipping_modules->cc_process();
+      }
+          ?></td>
           </tr>
 <?php
     }

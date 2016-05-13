@@ -311,6 +311,7 @@ CREATE TABLE orders (
   billing_country varchar(255) NOT NULL,
   billing_address_format_id int(5) NOT NULL,
   payment_method varchar(255) NOT NULL,
+  shipping_module varchar(255) NOT NULL,
   cc_type varchar(20),
   cc_owner varchar(255),
   cc_number varchar(32),

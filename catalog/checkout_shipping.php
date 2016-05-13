@@ -128,6 +128,12 @@
                                 'title' => (($free_shipping == true) ?  $quote[0]['methods'][0]['title'] : $quote[0]['module'] . ' (' . $quote[0]['methods'][0]['title'] . ')'),
                                 'cost' => $quote[0]['methods'][0]['cost']);
 
+// Parcel Shops
+              $shipping_modules->set_module($module);
+              if ( method_exists($module, 'before_payment') ) {
+                $shipping_modules->before_payment();
+              }
+
               tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
             }
           }

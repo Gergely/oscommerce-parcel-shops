@@ -80,6 +80,11 @@
 // load the before_process function from the payment modules
   $payment_modules->before_process();
 
+// Parcel Shops
+  if ( method_exists($shipping_modules->selected_module, 'before_process') ) {
+    $shipping_modules->before_process();
+  }
+
   $sql_data_array = array('customers_id' => $customer_id,
                           'customers_name' => $order->customer['firstname'] . ' ' . $order->customer['lastname'],
                           'customers_company' => $order->customer['company'],
@@ -111,6 +116,7 @@
                           'billing_country' => $order->billing['country']['title'], 
                           'billing_address_format_id' => $order->billing['format_id'], 
                           'payment_method' => $order->info['payment_method'], 
+                          'shipping_module' => $shipping['id'], // Parcel Shops
                           'cc_type' => $order->info['cc_type'], 
                           'cc_owner' => $order->info['cc_owner'], 
                           'cc_number' => $order->info['cc_number'], 
@@ -260,7 +266,7 @@
   if ($order->content_type != 'virtual') {
     $email_order .= "\n" . EMAIL_TEXT_DELIVERY_ADDRESS . "\n" . 
                     EMAIL_SEPARATOR . "\n" .
-                    tep_address_label($customer_id, $sendto, 0, '', "\n") . "\n";
+                    ( ( method_exists($shipping_modules->selected_module, 'after_process')) ? $shipping_modules->after_process() : tep_address_label($customer_id, $sendto, 0, '', "\n") ) . "\n"; // Parcel Shops
   }
 
   $email_order .= "\n" . EMAIL_TEXT_BILLING_ADDRESS . "\n" .
